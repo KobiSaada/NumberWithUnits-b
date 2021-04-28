@@ -12,7 +12,7 @@ namespace ariel {
 
    
 
-      NumberWithUnits::NumberWithUnits(double num,const std::string unit){
+      NumberWithUnits::NumberWithUnits(double num,const std::string &unit){
           if(UnitsMap.count(unit)==0){
               throw invalid_argument{"units not in the unitsmap"};
           }
@@ -24,17 +24,17 @@ namespace ariel {
     //read from the file and declare the proportion between the units
     void NumberWithUnits::read_units(ifstream& units_file){
         string unit11, unit22, k;
-        double x, y;
+        double x=0, y=0;
         while(units_file >> x >> unit11 >> k >> y >> unit22){//while we have what to read k some string
             UnitsMap[unit11][unit22] = y;
             UnitsMap[unit22][unit11] = 1/y;
          //for Deep converted
-           for (auto map: UnitsMap[unit22]){
+           for (auto const &map: UnitsMap[unit22]){
                 double x = UnitsMap[unit11][unit22] * map.second;
                 UnitsMap[unit11][map.first] = x;
                 UnitsMap[map.first][unit11] = 1/x;
         }
-          for (auto map: UnitsMap[unit11]){
+          for (auto const & map: UnitsMap[unit11]){
                 double x = UnitsMap[unit22][unit11] * map.second;
                 UnitsMap[unit22][map.first] = x;
                 UnitsMap[map.first][unit22] = 1/x;
